@@ -16,17 +16,15 @@ class UploadScreen extends StatefulWidget {
 
 class _UploadScreenState extends State<UploadScreen> {
   FilePickerResult? result;
-  String tit = 'Uploading....';
-
-  String sub = 'Please wait a moment while we upload your files.';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        title: const Text('Extract Images'),
         elevation: 0,
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.amber,
       ),
       body:  Column(
         crossAxisAlignment: CrossAxisAlignment.center,

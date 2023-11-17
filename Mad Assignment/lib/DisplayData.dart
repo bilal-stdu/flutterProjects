@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mad_assignment/app_theme.dart';
 //DisplayData
 
 import 'dart:convert';
@@ -32,11 +33,49 @@ class _DisplayDataState extends State<DisplayData> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: appThemeData,
       title: 'Flutter',
       home: Scaffold(
           appBar: AppBar(
             title: const Text('Leagues Data'),
           ),
+          drawer: Drawer(
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: [
+                DrawerHeader(
+                  decoration: BoxDecoration(
+                    color: Colors.blue,
+                  ),
+                  child: Text(
+                    'Football Leagues',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                    ),
+                  ),
+                ),
+                ListTile(
+                  title: Text('Home'),
+                  leading: Icon(Icons.home),
+                  onTap: () {
+                    // Add your navigation logic here
+                    Navigator.pop(context);
+                  },
+                ),
+                Divider(),
+                ListTile(
+                  title: Text('Leagues data'),
+                  leading: Icon(Icons.list),
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                // Add more ListTiles as needed with Dividers
+              ],
+            ),
+          ),
+
           body: Column(
             children: [
               Expanded(
@@ -73,44 +112,29 @@ class _DisplayDataState extends State<DisplayData> {
                                     SizedBox(height: 12),
                                     Text(
                                       'Name',
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                      style: Theme.of(context).textTheme.displayLarge,
                                     ),
                                     Text(
                                       leaguesData!.response![index].name.toString(),
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.normal,
-                                      ),
+                                      style: Theme.of(context).textTheme.bodyLarge,
                                     ),
                                     SizedBox(height: 12),
                                     Text(
                                       'Updated At',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                      style: Theme.of(context).textTheme.displayLarge,
                                     ),
                                     Text(
                                       leaguesData!.response![index].updatedAt.toString(),
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.normal,
-                                      ),
+                                      style: Theme.of(context).textTheme.bodyLarge,
                                     ),
                                     SizedBox(height: 12),
                                     Text(
                                       'Created At',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                      style: Theme.of(context).textTheme.displayLarge,
                                     ),
                                     Text(
                                       leaguesData!.response![index].createdAt.toString(),
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.normal,
-                                      ),
+                                      style: Theme.of(context).textTheme.bodyLarge,
                                     ),
                                   ],
                                 ),
@@ -118,6 +142,7 @@ class _DisplayDataState extends State<DisplayData> {
                             );
                           },
                         );
+                        ;
                         ;
                       }
                       else if (snapshot.hasError) {

@@ -4,8 +4,10 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
+import 'package:dio/dio.dart';
 
 import 'ImageDisplayScreen.dart';
+
 class UploadScreen extends StatefulWidget {
   final String title = 'Upload File';
   final String subtitle = 'Browse and choose the files you want to upload.';
@@ -13,7 +15,9 @@ class UploadScreen extends StatefulWidget {
   @override
   State<UploadScreen> createState() => _UploadScreenState();
 }
+
 class _UploadScreenState extends State<UploadScreen> {
+  double progress = 0.0;
   bool isUploaded = false;
   FilePickerResult? result;
   late Future<void> uploadFuture;
@@ -22,9 +26,12 @@ class _UploadScreenState extends State<UploadScreen> {
     super.initState();
     uploadFuture = Future.value();
   }
+
   Future<void> uploadPdf(File file) async {
-    var request = http.MultipartRequest('POST', Uri.parse('http://10.0.2.2:5000/uploadPdf'));
-    request.files.add(await http.MultipartFile.fromPath('pdf', file.path, contentType: MediaType('application', 'pdf')));
+    var request = http.MultipartRequest(
+        'POST', Uri.parse('http://10.0.2.2:5000/uploadPdf'));
+    request.files.add(await http.MultipartFile.fromPath('pdf', file.path,
+        contentType: MediaType('application', 'pdf')));
     var response = await request.send();
     if (response.statusCode == 200) {
       return response.stream.transform(utf8.decoder).first.then((value) {
@@ -38,9 +45,11 @@ class _UploadScreenState extends State<UploadScreen> {
   }
 
   Future<void> extractImages(String pdfUrl) async {
-    var response = await http.get(Uri.parse('http://10.0.2.2:5000/extractImagesFromPdf?pdf_url=$pdfUrl'));
+    var response = await http.get(
+        Uri.parse('http://10.0.2.2:5000/extractImagesFromPdf?pdf_url=$pdfUrl'));
     if (response.statusCode == 200) {
-      var imageLinks = List<String>.from(jsonDecode(response.body)['image_links']);
+      var imageLinks =
+          List<String>.from(jsonDecode(response.body)['image_links']);
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => ImageDisplayScreen(imageLinks)),
@@ -50,7 +59,6 @@ class _UploadScreenState extends State<UploadScreen> {
           isUploaded = false;
         });
       });
-
     } else {
       print('Failed to extract images.');
       throw Exception('Failed to extract images.');
@@ -114,7 +122,8 @@ class _UploadScreenState extends State<UploadScreen> {
                         if (element.path != null) {
                           setState(() {
                             uploadFuture = uploadPdf(File(element.path!));
-                            isUploaded = true; // Set isUploaded to true when file is selected
+                            isUploaded =
+                                true; // Set isUploaded to true when file is selected
                           });
                         }
                       }
@@ -128,7 +137,6 @@ class _UploadScreenState extends State<UploadScreen> {
                 ),
               ],
             ),
-
           const SizedBox(
             height: 15.0,
           ),
@@ -142,17 +150,21 @@ class _UploadScreenState extends State<UploadScreen> {
                     children: [
                       CircularProgressIndicator(),
                       SizedBox(height: 8),
-                      Text('File is being processed...', style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20.5,
-                      ),),
+                      Text(
+                        'File is being processed...',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20.5,
+                        ),
+                      ),
                     ],
                   ),
                 );
               } else if (snapshot.hasError) {
                 // Display an error message if the upload fails
                 setState(() {
-                  isUploaded = false; // Reset isUploaded to false if the upload fails
+                  isUploaded =
+                      false; // Reset isUploaded to false if the upload fails
                 });
                 return Column(
                   children: [
@@ -161,8 +173,7 @@ class _UploadScreenState extends State<UploadScreen> {
                     Text('Failed to upload file'),
                   ],
                 );
-              }
-              else {
+              } else {
                 // Upload completed successfully, no need to display anything here
                 return Container();
               }
@@ -173,4 +184,3 @@ class _UploadScreenState extends State<UploadScreen> {
     );
   }
 }
-

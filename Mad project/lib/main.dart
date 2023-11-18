@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter File upload Demo',
-      home: UploadScreen(1, tit, sub),
+      home: UploadScreen(),
     );
   }
 }

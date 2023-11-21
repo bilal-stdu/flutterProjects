@@ -4,7 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
-import 'package:dio/dio.dart';
+
 
 import 'ImageDisplayScreen.dart';
 
@@ -15,7 +15,6 @@ class UploadScreen extends StatefulWidget {
   @override
   State<UploadScreen> createState() => _UploadScreenState();
 }
-
 class _UploadScreenState extends State<UploadScreen> {
   double progress = 0.0;
   bool isUploaded = false;
@@ -26,44 +25,111 @@ class _UploadScreenState extends State<UploadScreen> {
     super.initState();
     uploadFuture = Future.value();
   }
-
-  Future<void> uploadPdf(File file) async {
+  // Future<void> uploadPdf(File file) async {
+  //   var request = http.MultipartRequest(
+  //       'POST', Uri.parse('http://10.0.2.2:5000/uploadPdf'));
+  //   request.files.add(await http.MultipartFile.fromPath('pdf', file.path,
+  //       contentType: MediaType('application', 'pdf')));
+  //   var response = await request.send();
+  //   if (response.statusCode == 200) {
+  //     return response.stream.transform(utf8.decoder).first.then((value) {
+  //       var pdfUrl = jsonDecode(value)['pdf_url'];
+  //       return extractImages(pdfUrl);
+  //     });
+  //   } else {
+  //     print('Failed to upload PDF.');
+  //     throw Exception('Failed to upload PDF.');
+  //   }
+  // }
+  // Future<void> extractImages(String pdfUrl) async {
+  //   var response = await http.get(
+  //       Uri.parse('http://10.0.2.2:5000/extractImagesFromPdf?pdf_url=$pdfUrl'));
+  //   if (response.statusCode == 200) {
+  //     var imageLinks =
+  //         List<String>.from(jsonDecode(response.body)['image_links']);
+  //     Navigator.push(
+  //       context,
+  //       MaterialPageRoute(builder: (context) => ImageDisplayScreen(imageLinks)),
+  //     ).then((_) {
+  //       // This block runs when you come back from the ImageDisplayScreen
+  //       setState(() {
+  //         isUploaded = false;
+  //       });
+  //     });
+  //   } else {
+  //     print('Failed to extract images.');
+  //     throw Exception('Failed to extract images.');
+  //   }
+  // }
+  Future<void> uploadPdf(List<File> files) async {
     var request = http.MultipartRequest(
         'POST', Uri.parse('http://10.0.2.2:5000/uploadPdf'));
-    request.files.add(await http.MultipartFile.fromPath('pdf', file.path,
-        contentType: MediaType('application', 'pdf')));
+
+    for (var file in files) {
+      request.files.add(await http.MultipartFile.fromPath('pdf', file.path,
+          contentType: MediaType('application', 'pdf')));
+    }
+
     var response = await request.send();
     if (response.statusCode == 200) {
       return response.stream.transform(utf8.decoder).first.then((value) {
-        var pdfUrl = jsonDecode(value)['pdf_url'];
-        return extractImages(pdfUrl);
+        var pdfUrls = List<String>.from(jsonDecode(value)['pdf_urls']);
+        return extractImages(pdfUrls);
       });
     } else {
-      print('Failed to upload PDF.');
-      throw Exception('Failed to upload PDF.');
+      print('Failed to upload PDFs.');
+      throw Exception('Failed to upload PDFs.');
     }
+  }
+  Future<void> extractImages(List<String> pdfUrls) async {
+    List<String> allImageLinks = []; // List to hold all the image links
+
+    for (var pdfUrl in pdfUrls) {
+      var response = await http.get(
+          Uri.parse('http://10.0.2.2:5000/extractImagesFromPdf?pdf_url=$pdfUrl'));
+      if (response.statusCode == 200) {
+        var imageLinks =
+        List<String>.from(jsonDecode(response.body)['image_links']);
+        allImageLinks.addAll(imageLinks); // Add the image links to the list
+      } else {
+        print('Failed to extract images.');
+        throw Exception('Failed to extract images.');
+      }
+    }
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ImageDisplayScreen(allImageLinks)),
+    ).then((_) {
+      // This block runs when you come back from the ImageDisplayScreen
+      setState(() {
+        isUploaded = false;
+      });
+    });
   }
 
-  Future<void> extractImages(String pdfUrl) async {
-    var response = await http.get(
-        Uri.parse('http://10.0.2.2:5000/extractImagesFromPdf?pdf_url=$pdfUrl'));
-    if (response.statusCode == 200) {
-      var imageLinks =
-          List<String>.from(jsonDecode(response.body)['image_links']);
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => ImageDisplayScreen(imageLinks)),
-      ).then((_) {
-        // This block runs when you come back from the ImageDisplayScreen
-        setState(() {
-          isUploaded = false;
-        });
-      });
-    } else {
-      print('Failed to extract images.');
-      throw Exception('Failed to extract images.');
-    }
-  }
+  // Future<void> extractImages(List<String> pdfUrls) async {
+  //   for (var pdfUrl in pdfUrls) {
+  //     var response = await http.get(
+  //         Uri.parse('http://10.0.2.2:5000/extractImagesFromPdf?pdf_url=$pdfUrl'));
+  //     if (response.statusCode == 200) {
+  //       var imageLinks =
+  //       List<String>.from(jsonDecode(response.body)['image_links']);
+  //       Navigator.push(
+  //         context,
+  //         MaterialPageRoute(builder: (context) => ImageDisplayScreen(imageLinks)),
+  //       ).then((_) {
+  //         // This block runs when you come back from the ImageDisplayScreen
+  //         setState(() {
+  //           isUploaded = false;
+  //         });
+  //       });
+  //     } else {
+  //       print('Failed to extract images.');
+  //       throw Exception('Failed to extract images.');
+  //     }
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -108,33 +174,63 @@ class _UploadScreenState extends State<UploadScreen> {
                 const SizedBox(
                   height: 15.0,
                 ),
+                // FloatingActionButton(
+                //   onPressed: () async {
+                //     result = await FilePicker.platform.pickFiles(
+                //       type: FileType.custom,
+                //       allowedExtensions: ['pdf'],
+                //     );
+                //     if (result == null) {
+                //       print("No file selected");
+                //     } else {
+                //       for (var element in result!.files) {
+                //         print(element.name);
+                //         if (element.path != null) {
+                //           setState(() {
+                //             uploadFuture = uploadPdf(File(element.path!));
+                //             isUploaded =
+                //                 true; // Set isUploaded to true when file is selected
+                //           });
+                //         }
+                //       }
+                //     }
+                //   },
+                //   backgroundColor: Colors.amber,
+                //   child: const Icon(
+                //     Icons.add,
+                //     color: Colors.black,
+                //   ),
+                // ),
                 FloatingActionButton(
                   onPressed: () async {
                     result = await FilePicker.platform.pickFiles(
                       type: FileType.custom,
                       allowedExtensions: ['pdf'],
+                      allowMultiple: true, // Allow multiple files to be picked
                     );
                     if (result == null) {
                       print("No file selected");
                     } else {
+                      List<File> files = []; // List to hold the selected files
                       for (var element in result!.files) {
                         print(element.name);
                         if (element.path != null) {
-                          setState(() {
-                            uploadFuture = uploadPdf(File(element.path!));
-                            isUploaded =
-                                true; // Set isUploaded to true when file is selected
-                          });
+                          files.add(File(element.path!)); // Add the file to the list
                         }
                       }
+                      setState(() {
+                        uploadFuture = uploadPdf(files); // Call uploadPdfs with the list of files
+                        isUploaded = true; // Set isUploaded to true when files are selected
+                      });
                     }
                   },
                   backgroundColor: Colors.amber,
-                  child: Icon(
+                  child: const Icon(
                     Icons.add,
                     color: Colors.black,
                   ),
                 ),
+
               ],
             ),
           const SizedBox(
@@ -145,14 +241,14 @@ class _UploadScreenState extends State<UploadScreen> {
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 // Display a progress indicator while the file is being processed
-                return Center(
+                return const Center(
                   child: Column(
                     children: [
                       CircularProgressIndicator(),
                       SizedBox(height: 8),
                       Text(
                         'File is being processed...',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 20.5,
                         ),
@@ -166,7 +262,7 @@ class _UploadScreenState extends State<UploadScreen> {
                   isUploaded =
                       false; // Reset isUploaded to false if the upload fails
                 });
-                return Column(
+                return const Column(
                   children: [
                     Icon(Icons.error, color: Colors.red),
                     SizedBox(height: 8),

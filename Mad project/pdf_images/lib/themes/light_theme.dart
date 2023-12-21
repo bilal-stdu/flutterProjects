@@ -9,7 +9,7 @@ ThemeData lightTheme() {
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.blue, // Set background color of ElevatedButton
+        foregroundColor: Colors.white, backgroundColor: Colors.blue, // Keep the text color as white
       ),
     ),
     textTheme: const TextTheme(

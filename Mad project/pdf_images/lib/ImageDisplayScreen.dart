@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:pdf_images/theme_provider.dart';
+import 'package:provider/provider.dart';
 
 
 class ImageDisplayScreen extends StatefulWidget {
@@ -11,12 +13,24 @@ class ImageDisplayScreen extends StatefulWidget {
 }
 
 class _ImageDisplayScreenState extends State<ImageDisplayScreen> {
+  bool _isDarkMode = false;
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Extracted Images'),
-        backgroundColor: Colors.amber,
+        title: const Text("File picker demo"),
+        actions: [
+          IconButton(
+            icon: Icon(_isDarkMode ? Icons.light_mode : Icons.dark_mode),
+            onPressed: () {
+              setState(() {
+                _isDarkMode = !_isDarkMode;
+                themeProvider.setTheme(_isDarkMode);
+              });
+            },
+          ),
+        ],
       ),
       body: FutureBuilder(
         future: _getImages(widget.imageUrls),

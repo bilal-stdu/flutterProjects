@@ -31,12 +31,6 @@ class _FilePickerDemoState extends State<FilePickerDemo> {
     uploadFuture = Future.value();
   }
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   uploadFuture = Future.value();
-  // }
-
   Future<void> uploadPdf(List<File> files) async {
     print("Function uploadPdf called");
     var request = http.MultipartRequest(
@@ -59,34 +53,7 @@ class _FilePickerDemoState extends State<FilePickerDemo> {
       throw Exception('Failed to upload PDFs.');
     }
   }
-  // Future<void> extractImages(List<String> pdfUrls) async {
-  //   print("Function extract images called");
-  //   List<String> allImageLinks = []; // List to hold all the image links
-  //
-  //   for (var pdfUrl in pdfUrls) {
-  //     var response = await http.get(
-  //         Uri.parse('http://10.0.2.2:5000/extractImagesFromPdf?pdf_url=$pdfUrl'));
-  //     if (response.statusCode == 200) {
-  //       var imageLinks =
-  //       List<String>.from(jsonDecode(response.body)['image_links']);
-  //       allImageLinks.addAll(imageLinks); // Add the image links to the list
-  //       print(imageLinks);
-  //     } else {
-  //       print('Failed to extract images.');
-  //       throw Exception('Failed to extract images.');
-  //     }
-  //   }
-  //
-  //   Navigator.push(
-  //     context,
-  //     MaterialPageRoute(builder: (context) => ImageDisplayScreen(allImageLinks)),
-  //   ).then((_) {
-  //     // This block runs when you come back from the ImageDisplayScreen
-  //     setState(() {
-  //       isUploaded = false;
-  //     });
-  //   });
-  // }
+
   Future<void> extractImages(List<String> pdfUrls) async {
     print("Function extract images called");
     List<String> allImageLinks = []; // List to hold all the image links
@@ -96,7 +63,8 @@ class _FilePickerDemoState extends State<FilePickerDemo> {
         Uri.parse('http://10.0.2.2:5000/extractImagesFromPdf?pdf_url=$pdfUrl'),
       );
       if (response.statusCode == 200) {
-        var imageLinks = List<String>.from(jsonDecode(response.body)['image_links']);
+        var imageLinks =
+            List<String>.from(jsonDecode(response.body)['image_links']);
         allImageLinks.addAll(imageLinks); // Add the image links to the list
         print(imageLinks);
       } else {
@@ -119,8 +87,6 @@ class _FilePickerDemoState extends State<FilePickerDemo> {
       });
     });
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -168,72 +134,12 @@ class _FilePickerDemoState extends State<FilePickerDemo> {
                           style: Theme.of(context).textTheme.displayLarge,
                         );
                       },
-                      separatorBuilder:
-                          (BuildContext context, int index) {
+                      separatorBuilder: (BuildContext context, int index) {
                         return const SizedBox(
                           height: 5,
                         );
                       },
                     ),
-                    // ElevatedButton(
-                    //   onPressed: () async {
-                    //     if (result == null || result!.files.isEmpty) {
-                    //       print("No file selected");
-                    //     } else {
-                    //       setState(() {
-                    //         isUploaded = true; // Set a flag to indicate that files are being uploaded
-                    //       });
-                    //
-                    //       // Show a circular progress indicator and a message
-                    //       showDialog(
-                    //         context: context,
-                    //         barrierDismissible: false,
-                    //         builder: (BuildContext context) {
-                    //           return AlertDialog(
-                    //             content: Column(
-                    //               mainAxisSize: MainAxisSize.min,
-                    //               children: [
-                    //                 CircularProgressIndicator(),
-                    //                 SizedBox(height: 16),
-                    //                 Text("Processing files..."),
-                    //               ],
-                    //             ),
-                    //           );
-                    //         },
-                    //       );
-                    //
-                    //       // Convert PlatformFile objects to File objects
-                    //       List<File> files = result!.files.map((platformFile) => File(platformFile.path!)).toList();
-                    //
-                    //       // Use FutureBuilder to handle the asynchronous operation
-                    //       await FutureBuilder<void>(
-                    //         future: uploadPdf(files),
-                    //         builder: (context, snapshot) {
-                    //           if (snapshot.connectionState == ConnectionState.done) {
-                    //             // Once the uploadPdf is complete, close the dialog
-                    //             Navigator.pop(context);
-                    //
-                    //             // Handle any errors that occurred during the operation
-                    //             if (snapshot.hasError) {
-                    //               print("Error: ${snapshot.error}");
-                    //             }
-                    //
-                    //             // Set the flag back to false
-                    //             setState(() {
-                    //               isUploaded = false;
-                    //             });
-                    //
-                    //             // No need to navigate here; it's handled in the extractImages function
-                    //           }
-                    //
-                    //           // Placeholder widget while waiting for the operation to complete
-                    //           return Container();
-                    //         },
-                    //       );
-                    //     }
-                    //   },
-                    //   child: const Text("Extract Images"),
-                    // ),
                     ElevatedButton(
                       onPressed: () async {
                         if (result == null || result!.files.isEmpty) {
@@ -241,7 +147,8 @@ class _FilePickerDemoState extends State<FilePickerDemo> {
                         } else {
                           if (!isUploaded) {
                             setState(() {
-                              isUploaded = true; // Set a flag to indicate that files are being uploaded
+                              isUploaded =
+                                  true; // Set a flag to indicate that files are being uploaded
                             });
 
                             // Show a circular progress indicator and a message
@@ -249,7 +156,7 @@ class _FilePickerDemoState extends State<FilePickerDemo> {
                               context: context,
                               barrierDismissible: false,
                               builder: (BuildContext context) {
-                                return AlertDialog(
+                                return const AlertDialog(
                                   content: Column(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
@@ -263,13 +170,16 @@ class _FilePickerDemoState extends State<FilePickerDemo> {
                             );
 
                             // Convert PlatformFile objects to File objects
-                            List<File> files = result!.files.map((platformFile) => File(platformFile.path!)).toList();
+                            List<File> files = result!.files
+                                .map((platformFile) => File(platformFile.path!))
+                                .toList();
 
                             // Use FutureBuilder to handle the asynchronous operation
                             await FutureBuilder<void>(
                               future: uploadPdf(files),
                               builder: (context, snapshot) {
-                                if (snapshot.connectionState == ConnectionState.done) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.done) {
                                   // Once the uploadPdf is complete, close the dialog
                                   Navigator.pop(context);
 
@@ -295,9 +205,6 @@ class _FilePickerDemoState extends State<FilePickerDemo> {
                       },
                       child: const Text("Extract Images"),
                     ),
-
-
-
                   ],
                 ),
               ),
@@ -305,7 +212,8 @@ class _FilePickerDemoState extends State<FilePickerDemo> {
             Center(
               child: ElevatedButton(
                 onPressed: () async {
-                  result = await FilePicker.platform.pickFiles(allowMultiple: true);
+                  result =
+                      await FilePicker.platform.pickFiles(allowMultiple: true);
                   if (result == null) {
                     print("No file selected");
                   } else {
@@ -321,7 +229,6 @@ class _FilePickerDemoState extends State<FilePickerDemo> {
           ],
         ),
       ),
-
     );
   }
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pdf_images/theme_provider.dart';
+import 'package:pdf_images/themes/theme_provider.dart';
 import 'package:provider/provider.dart';
 
 

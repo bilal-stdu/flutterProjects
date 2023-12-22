@@ -1,13 +1,11 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:pdf_images/themes/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
-
-import 'package:pdf_images/theme_provider.dart';
-
 import 'ImageDisplayScreen.dart';
 
 class FilePickerDemo extends StatefulWidget {

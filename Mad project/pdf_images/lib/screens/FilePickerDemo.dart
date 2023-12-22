@@ -1,5 +1,6 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pdf_images/themes/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'dart:convert';
@@ -91,10 +92,10 @@ class _FilePickerDemoState extends State<FilePickerDemo> {
     final themeProvider = Provider.of<ThemeProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text("File picker demo"),
+        title: const Text("Extract Images from pdf file"),
         actions: [
           IconButton(
-            icon: Icon(_isDarkMode ? Icons.light_mode : Icons.dark_mode),
+            icon: Icon(_isDarkMode ? Icons.light_mode : Icons.dark_mode_outlined, color: Colors.white,),
             onPressed: () {
               setState(() {
                 _isDarkMode = !_isDarkMode;
@@ -107,8 +108,41 @@ class _FilePickerDemoState extends State<FilePickerDemo> {
       body: Padding(
         padding: const EdgeInsets.all(30.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Text(
+              'Upload your files',
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+            Text(
+              'fast and easy way',
+                style: Theme.of(context).textTheme.bodySmall
+            ),
+            SvgPicture.asset(
+              'assets/icon.svg', // Replace with the path to your SVG file
+              height: 70, // You can adjust the size as needed
+              width: 70,
+            ),
+            const SizedBox(height: 30),
+            Center(
+              child: ElevatedButton(
+                onPressed: () async {
+                  result =
+                      await FilePicker.platform.pickFiles(allowMultiple: true);
+                  if (result == null) {
+                    print("No file selected");
+                  } else {
+                    setState(() {});
+                    for (var element in result!.files) {
+                      print(element.name);
+                    }
+                  }
+                },
+                child: const Text("Pick pdf files"),
+              ),
+            ),
+            //const Spacer(),
+            const SizedBox(height: 200,),
             if (result != null)
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -138,6 +172,7 @@ class _FilePickerDemoState extends State<FilePickerDemo> {
                         );
                       },
                     ),
+                    const SizedBox(height: 20,),
                     ElevatedButton(
                       onPressed: () async {
                         if (result == null || result!.files.isEmpty) {
@@ -206,24 +241,6 @@ class _FilePickerDemoState extends State<FilePickerDemo> {
                   ],
                 ),
               ),
-            const Spacer(),
-            Center(
-              child: ElevatedButton(
-                onPressed: () async {
-                  result =
-                      await FilePicker.platform.pickFiles(allowMultiple: true);
-                  if (result == null) {
-                    print("No file selected");
-                  } else {
-                    setState(() {});
-                    for (var element in result!.files) {
-                      print(element.name);
-                    }
-                  }
-                },
-                child: Text("File Picker"),
-              ),
-            ),
           ],
         ),
       ),

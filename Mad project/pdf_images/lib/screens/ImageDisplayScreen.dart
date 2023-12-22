@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:pdf_images/themes/theme_provider.dart';
 import 'package:provider/provider.dart';
 
-
 class ImageDisplayScreen extends StatefulWidget {
   final List<String> imageUrls;
 
-  ImageDisplayScreen(this.imageUrls);
+  ImageDisplayScreen(this.imageUrls, {super.key});
 
   @override
   _ImageDisplayScreenState createState() => _ImageDisplayScreenState();
@@ -19,10 +18,10 @@ class _ImageDisplayScreenState extends State<ImageDisplayScreen> {
     final themeProvider = Provider.of<ThemeProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text("File picker demo"),
+        title: const Text("Extract Images from pdf file"),
         actions: [
           IconButton(
-            icon: Icon(_isDarkMode ? Icons.light_mode : Icons.dark_mode),
+            icon: Icon(_isDarkMode ? Icons.light_mode : Icons.dark_mode_outlined,color: Colors.white,),
             onPressed: () {
               setState(() {
                 _isDarkMode = !_isDarkMode;
@@ -44,8 +43,22 @@ class _ImageDisplayScreenState extends State<ImageDisplayScreen> {
               itemCount: widget.imageUrls.length,
               itemBuilder: (context, index) {
                 return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Image.network(widget.imageUrls[index]),
+                  padding: EdgeInsets.all(20),
+                  child: Card(
+                    shape: Border.all(
+                      width: 1,
+                    ),
+                    elevation: 2,
+                    //color: Colors.black,
+                    child: Column(
+                      children: <Widget>[
+                        Image.network(widget.imageUrls[index]),
+                        const SizedBox(
+                          height: 1,
+                        ),
+                      ],
+                    ),
+                  ),
                 );
               },
             );
@@ -65,4 +78,3 @@ class _ImageDisplayScreenState extends State<ImageDisplayScreen> {
     return images;
   }
 }
-

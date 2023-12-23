@@ -122,6 +122,9 @@ class _FilePickerDemoState extends State<FilePickerDemo> {
               'assets/icon.svg', // Replace with the path to your SVG file
               height: 70, // You can adjust the size as needed
               width: 70,
+              colorFilter: _isDarkMode ? const ColorFilter.mode(Colors.white, BlendMode.srcIn) : null,
+              // color: _isDarkMode ? Colors.white : null,
+              // colorBlendMode: BlendMode.srcIn,
             ),
             const SizedBox(height: 30),
             Center(

@@ -100,7 +100,7 @@ class _FilePickerDemoState extends State<FilePickerDemo> {
     final themeProvider = Provider.of<ThemeProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Extract Images from pdf file"),
+        title: Text("ExtractImgPDF", style: Theme.of(context).textTheme.titleLarge,),
         actions: [
           IconButton(
             icon: Icon(_isDarkMode ? Icons.light_mode : Icons.dark_mode_outlined, color: Colors.white,),

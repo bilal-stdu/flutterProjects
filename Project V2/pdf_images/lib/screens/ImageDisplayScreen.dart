@@ -44,15 +44,32 @@ class _ImageDisplayScreenState extends State<ImageDisplayScreen> {
                 return Padding(
                   padding: EdgeInsets.all(20),
                   child: Card(
-                    shape: Border.all(
-                      width: 1,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10), // Adjust this value as needed
+                      side: BorderSide(
+                        color: Colors.grey.withOpacity(0.2),
+                        width: 1,
+                      ),
                     ),
                     elevation: 2,
                     child: Column(
                       children: <Widget>[
+                        Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey.withOpacity(0.2)),
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.all(10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Text('Size: ${widget.imageUrls[index]['size']} KB', style: Theme.of(context).textTheme.titleMedium,),
+                                Text('Format: .${widget.imageUrls[index]['format']}', style: Theme.of(context).textTheme.titleMedium),
+                              ],
+                            ),
+                          ),
+                        ),
                         Image.network(widget.imageUrls[index]['url']),
-                        Text('Size: ${widget.imageUrls[index]['size']} KB'),
-                        Text('Format: .${widget.imageUrls[index]['format']}'),
                         const SizedBox(
                           height: 1,
                         ),
@@ -62,6 +79,32 @@ class _ImageDisplayScreenState extends State<ImageDisplayScreen> {
                 );
               },
             );
+
+
+            // return ListView.builder(
+            //   itemCount: widget.imageUrls.length,
+            //   itemBuilder: (context, index) {
+            //     return Padding(
+            //       padding: EdgeInsets.all(20),
+            //       child: Card(
+            //         shape: Border.all(
+            //           width: 1,
+            //         ),
+            //         elevation: 2,
+            //         child: Column(
+            //           children: <Widget>[
+            //             Image.network(widget.imageUrls[index]['url']),
+            //             Text('Size: ${widget.imageUrls[index]['size']} KB'),
+            //             Text('Format: .${widget.imageUrls[index]['format']}'),
+            //             const SizedBox(
+            //               height: 1,
+            //             ),
+            //           ],
+            //         ),
+            //       ),
+            //     );
+            //   },
+            // );
           }
         },
       ),

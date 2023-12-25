@@ -30,7 +30,11 @@ ThemeData lightTheme() {
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        foregroundColor: Colors.white, backgroundColor: const Color(0xFF8115c4),
+        foregroundColor: Colors.white,
+        backgroundColor: const Color(0xFF8115c4),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(5),
+        ),
       ),
     ),
     textTheme: const TextTheme(
@@ -38,6 +42,8 @@ ThemeData lightTheme() {
       labelLarge: TextStyle(color: Colors.white, fontFamily: 'Poppins'),
       bodyLarge: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, fontFamily: 'Poppins', color: Colors.black),
       bodySmall: TextStyle(fontSize: 16, color: Color(0xFF757575)),
+      titleLarge: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white, fontFamily: 'Poppins'),
+      titleMedium: TextStyle(fontSize: 14,color: Colors.black, fontFamily: 'Poppins'),
     ),
   );
 }

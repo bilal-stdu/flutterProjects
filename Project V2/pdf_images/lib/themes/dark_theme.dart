@@ -32,14 +32,21 @@ ThemeData darkTheme() {
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        foregroundColor: Colors.white, backgroundColor: Colors.black, // Light yellow color
+        foregroundColor: Colors.white,
+        backgroundColor: Colors.black, // Light yellow color
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(5),
+        ),
       ),
+
     ),
     textTheme: const TextTheme(
       displayLarge: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white, fontFamily: 'Poppins'),
       labelLarge: TextStyle(color: Colors.black, fontFamily: 'Poppins'),
       bodyLarge: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, fontFamily: 'Poppins', color: Colors.white),
       bodySmall: TextStyle(fontSize: 16, color: Colors.white),
+      titleLarge: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white, fontFamily: 'Poppins'),
+        titleMedium: TextStyle(fontSize: 16,color: Colors.white, fontFamily: 'Poppins'),
     ),
   );
 }

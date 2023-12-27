@@ -220,10 +220,15 @@ class _FilePickerDemoState extends State<FilePickerDemo> {
                               barrierDismissible: false,
                               builder: (BuildContext context) {
                                 return const AlertDialog(
+                                  shape: RoundedRectangleBorder(
+                                    //borderRadius: BorderRadius.circular(15.0),  
+                                   borderRadius: BorderRadius.all(Radius.circular(0)),
+                                  ),
                                   content: Column(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      CircularProgressIndicator(),
+                                      //CircularProgressIndicator(),
+                                      LinearProgressIndicator(),
                                       SizedBox(height: 16),
                                       Text("Processing files..."),
                                     ],

@@ -1,0 +1,56 @@
+import 'package:flutter/material.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:Terminal_Lab/screens/dashboard_screen.dart';
+
+class SignupScreen extends StatelessWidget {
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController firstNameController = TextEditingController();
+  final TextEditingController lastNameController = TextEditingController();
+
+  final databaseReference = FirebaseDatabase.instance.reference().child('users');
+
+  void signUp() {
+    databaseReference.push().set({
+      'email': emailController.text,
+      'password': passwordController.text,
+      'firstName': firstNameController.text,
+      'lastName': lastNameController.text,
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Signup'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            TextField(controller: emailController, decoration: InputDecoration(labelText: 'Email')),
+            TextField(controller: passwordController, decoration: InputDecoration(labelText: 'Password')),
+            TextField(controller: firstNameController, decoration: InputDecoration(labelText: 'First Name')),
+            TextField(controller: lastNameController, decoration: InputDecoration(labelText: 'Last Name')),
+            SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: signUp,
+              child: Text('Sign Up'),
+            ),
+            SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SigninScreen()),
+                );
+              },
+              child: Text('Sign In'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

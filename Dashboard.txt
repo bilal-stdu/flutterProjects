@@ -1,0 +1,40 @@
+import 'package:flutter/material.dart';
+import 'package:firebase_database/firebase_database.dart';
+
+class DashboardScreen extends StatefulWidget {
+  @override
+  _DashboardScreenState createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> {
+  List<Map<dynamic, dynamic>> users = [];
+
+  @override
+  void initState() {
+    super.initState();
+    DatabaseReference reference = FirebaseDatabase.instance.reference().child('users');
+    reference.onChildAdded.listen((event) {
+      setState(() {
+        users.add(Map.from(event.snapshot.value));
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Dashboard'),
+      ),
+      body: ListView.builder(
+        itemCount: users.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            title: Text('Email: ${users[index]['email']}'),
+            subtitle: Text('Name: ${users[index]['firstName']} ${users[index]['lastName']}'),
+          );
+        },
+      ),
+    );
+  }
+}

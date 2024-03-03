@@ -20,9 +20,9 @@ api = Api(app)
 
 # Cloudinary Configuration
 cloudinary.config( 
-  cloud_name = "dizaihihn", 
-  api_key = "549991823224913", 
-  api_secret = "eeBzO-yhNXCThNNZcboTQzqFeqM" 
+  cloud_name = "", 
+  api_key = "", 
+  api_secret = "" 
 )
 
 def delete_files_with_extension(directory_path, extensions=['.png', '.pdf', 'jpg', 'jpeg']):
